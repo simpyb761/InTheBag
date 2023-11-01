@@ -1,6 +1,7 @@
 ﻿using InTheBag.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace InTheBag.Controllers
 {
@@ -48,6 +49,27 @@ namespace InTheBag.Controllers
         {
             return View();
         }
+        public IActionResult WishesIndex()
+        {
+            Wishes mywishes = new Wishes { Id = 1, Wish1 = "Healthy", Wish2 = "Wealthy", Wish3 = "Wise" };
+            string jsonWishes = JsonSerializer.Serialize(mywishes);
+            HttpContext.Session.SetString("wish", jsonWishes);
+            return View();
+        }
+
+        public IActionResult NewWishesIndex()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult NewWishesIndex(Wishes model)
+        {
+            Wishes mywishes = new Wishes { Id = 1, Wish1=model.Wish1, Wish2=model.Wish2, Wish3 = model.Wish3 };
+            string jsonWishes = JsonSerializer.Serialize(mywishes);
+            HttpContext.Session.SetString("wish", jsonWishes);
+            return View("WishesIndex");
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
